@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sigsegv-test
+  name: sigsegv-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sigsegv-test
+  template:
+    metadata:
+      labels:
+        app: sigsegv-test
+    spec:
+      containers:
+      - name: sigsegv-test
+        image: quay.io/bryonbaker/sigsegv:latest

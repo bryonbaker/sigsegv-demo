@@ -1,5 +1,5 @@
 # sigsegv-demo
-Container that will segmentation fault after 5 seconds.
+Container that will segmentation fault after 30 seconds.
 
 Use this project to generate SIGSEGV faults and see how to debug them in Kubernetes.
 

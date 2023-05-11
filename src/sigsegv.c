@@ -7,7 +7,7 @@ main( void ) {
     printf("SIGSEGV Generator.\n");
     char* bogusMsg = {"The quick brown fox jumps over the lazy dog"};
     char *nullPtr = 0;
-    int crashDelay = 5;
+    int crashDelay = 30;
     time_t  startTime, thisTime, tickTime;
 
     printf("Crashing in %d seconds.\n", crashDelay);

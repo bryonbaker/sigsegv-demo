@@ -26,7 +26,7 @@ May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.serv
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Consumed 577ms CPU time
 ```
 
-What is interesting about this is that the memory reference that calls the failing ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
+What is interesting about this is that the memory reference that calls the calling ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
 
 If you look in the map file you see this calling address is from inside the ```crasher()``` function that has a memory range of 0x400735 to 0x000816. 
 

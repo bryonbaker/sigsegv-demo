@@ -7,7 +7,6 @@ The image can be found at: quay.io/bryonbaker/sigsegv:latest
 
 ## How to use this with OpenShift if no core dumps are available
 
-
 The following is the journal output from an OpenShift node. This is useful if you have not enabled the core dump:
 What is interesting about this is that the memory reference that calls the failing ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
 
@@ -27,10 +26,40 @@ May 11 09:32:33 crc-9ltqk-master-0 systemd-coredump[259187]: Process 258213 (sig
 May 11 09:32:33 crc-9ltqk-master-0 conmon[258200]: conmon f1ee30489db2a0242ef1 <ninfo>: container 258213 exited with status 139
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Succeeded.
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Consumed 577ms CPU time
-
 ```
 
-## Testing with podman
+### How to extract the logs from the node
+
+To perform the previous analysis you need to extract the journal from the node that was hosting the crashed pod.
+
+Once you have found the node perform the following as a ```kubeadmin``` user and root:
+```
+$ oc get nodes
+NAME                 STATUS   ROLES                         AGE   VERSION
+crc-9ltqk-master-0   Ready    control-plane,master,worker   72d   v1.25.4+a34b9e9
+```
+
+```
+$ oc debug node/crc-9ltqk-master-0
+
+Starting pod/crc-9ltqk-master-0-debug ...
+To use host binaries, run `chroot /host`
+Pod IP: 192.168.126.11
+If you don't see a command prompt, try pressing enter.
+sh-4.4# 
+```
+
+```
+$ chroot /host
+sh-4.4# 
+```
+
+Search the journal for ```status 139```
+```
+$ journalctl
+```
+
+# Testing with podman
 ```podman run --rm --name sigsegv quay.io/bryonbaker/sigsegv:latest```
 
 ```journalctl -f``` generates:

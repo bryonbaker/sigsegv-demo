@@ -5,6 +5,9 @@ Use this project to generate SIGSEGV faults and see how to debug them in Kuberne
 
 The image can be found at: quay.io/bryonbaker/sigsegv:latest
 
+Instructions to build the image yourself are below.
+
+
 ## How to use this with OpenShift if no core dumps are available
 
 The following is the journal output from an OpenShift node. This is useful if you have not enabled the core dump:
@@ -106,6 +109,9 @@ $ journalctl
 ```
 
 # Testing with podman
+
+Run the image I have built:
+
 ```podman run --rm --name sigsegv quay.io/bryonbaker/sigsegv:latest```
 
 ```journalctl -f``` generates:
@@ -128,4 +134,23 @@ May 11 17:21:34 rh-brbaker systemd[1]: systemd-coredump@16-59383-0.service: Deac
 May 11 17:21:34 rh-brbaker audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-coredump@16-59383-0 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
 May 11 17:21:34 rh-brbaker systemd[1981]: libpod-f3cf1a789063f2593fbcfd60df69208ae551c7c696e5caaa25bbf3cfe92be664.scope: Consumed 29.374s CPU time.
 
+```
+
+## Build the image yourself
+In the src directory run the command:
+
+```
+podman build -t sigsegv:latest .
+```
+
+Run the image locally to test it (see example below)
+
+```
+podman run --rm --name sigsegv sigsegv:latest
+```
+
+Montor the logs until it crashes:
+
+```
+journalctl -f
 ```

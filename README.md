@@ -46,7 +46,7 @@ If you look in the map file you see this calling address is from inside the ```c
  *fill*         0x0000000000400816        0xa 
 ```
 
-This would lead you to the ```memcpy()``` and a null pointer dereference. 
+Looking at the code in this function would lead you to the ```memcpy()``` and a null pointer dereference. 
 
 ```
 void

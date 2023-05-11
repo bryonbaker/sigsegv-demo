@@ -8,9 +8,7 @@ The image can be found at: quay.io/bryonbaker/sigsegv:latest
 ## How to use this with OpenShift if no core dumps are available
 
 The following is the journal output from an OpenShift node. This is useful if you have not enabled the core dump:
-What is interesting about this is that the memory reference that calls the failing ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
 
-If you look in the map file you see this calling address is from inside the ```crasher()``` funciton that has a memory range of 0x400735 to 0x000816. This would lead you to the ```memcpy()``` and a null pointer dereference. 
 ```
 May 11 09:32:33 crc-9ltqk-master-0 kernel: sigsegv[258213]: segfault at 0 ip 00007ff52d488c91 sp 00007ffe9e65e4d8 error 6 in libc-2.28.so[7ff52d3b9000+1bc000]
 May 11 09:32:33 crc-9ltqk-master-0 kernel: Code: 0f 82 43 d7 06 00 0f 1f 00 f3 0f 1e fa 48 89 f8 48 83 fa 20 72 49 48 83 fa 40 0f 87 9f 00 00 00 c5 fe 6f 06 c5 fe 6f 4c 16 e0 <c5> fe 7f 07 c5 fe 7f 4c 17 e0 c5 f8 77 c3 48 3b 15 fa 48 2f 00 0f
@@ -27,6 +25,54 @@ May 11 09:32:33 crc-9ltqk-master-0 conmon[258200]: conmon f1ee30489db2a0242ef1 <
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Succeeded.
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Consumed 577ms CPU time
 ```
+
+What is interesting about this is that the memory reference that calls the failing ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
+
+If you look in the map file you see this calling address is from inside the ```crasher()``` function that has a memory range of 0x400735 to 0x000816. 
+
+```
+
+                0x0000000000400630                _start
+ .text          0x000000000040065f        0x0 /usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64/crt1.o
+ *fill*         0x000000000040065f        0x1 
+ .text          0x0000000000400660        0x5 /usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64/crt1.o
+                0x0000000000400660                _dl_relocate_static_pie
+ .text          0x0000000000400665        0x0 /usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64/crti.o
+ *fill*         0x0000000000400665        0xb 
+ .text          0x0000000000400670       0xa6 /usr/lib/gcc/x86_64-redhat-linux/8/crtbegin.o
+ .text          0x0000000000400716      0x100 /tmp/cc2OUhZx.o
+                0x0000000000400716                main
+                0x0000000000400735                crasher
+ *fill*         0x0000000000400816        0xa 
+```
+
+This would lead you to the ```memcpy()``` and a null pointer dereference. 
+
+```
+void
+crasher() {
+    char* bogusMsg = {"The quick brown fox jumps over the lazy dog"};
+    char *nullPtr = 0;
+    int crashDelay = 30;
+    time_t  startTime, thisTime, tickTime;
+
+    printf("Crashing in %d seconds...\n", crashDelay);
+
+    startTime = tickTime = thisTime =  time(0);
+    for (;;) {
+        thisTime = time(0);
+
+        if (difftime( thisTime, tickTime) >= 1) {
+            tickTime = thisTime;
+            printf(".\n");
+        }
+        else if (difftime( thisTime, startTime ) >= crashDelay) {
+            memcpy( nullPtr, &bogusMsg, strlen(bogusMsg));
+        }
+    }
+}
+```
+
 
 ### How to extract the logs from the node
 

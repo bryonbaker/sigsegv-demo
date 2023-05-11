@@ -6,15 +6,15 @@ WORKDIR /build
 RUN dnf install -y gcc
 
 COPY sigsegv.c .
-RUN gcc -fdiagnostics-color=always -g sigsegv.c -o /build/sigsegv
+RUN gcc -fdiagnostics-color=always -g sigsegv.c -Wl,-Map=sigsegv.map -o /build/sigsegv
 
 FROM registry.redhat.io/ubi8:8.6-943
-
 
 RUN mkdir -p /app
 
 WORKDIR "/app"
 
 COPY --from=builder /build/sigsegv .
+COPY --from=builder /build/sigsegv.map .
 
 ENTRYPOINT ["/app/sigsegv"]

@@ -2,6 +2,8 @@
 #include <memory.h>
 #include <time.h>
 
+void crasher();
+
 int
 main( void ) {
     printf("SIGSEGV Generator.\n");

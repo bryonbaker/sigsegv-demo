@@ -1,0 +1,3 @@
+.vscode/tasks.json
+src/sigsegv
+sigsegv-demo.code-workspace

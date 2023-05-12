@@ -29,6 +29,9 @@ May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.serv
 May 11 09:32:33 crc-9ltqk-master-0 systemd[1]: systemd-coredump@26-259186-0.service: Consumed 577ms CPU time
 ```
 
+Note that the addresses in the journal are ```return addresses```, not the address from the map file.
+
+
 What is interesting about this is that the memory reference that calls the calling ```__memmove_avx_unaligned_erms``` function is at 0x40072e. 
 
 If you look in the map file you see this calling address is from inside the ```crasher()``` function that has a memory range of 0x400735 to 0x000816. 
@@ -75,6 +78,14 @@ crasher() {
     }
 }
 ```
+
+### How to understand the code versus map versus journal output
+
+Below is a disassembly of the crasher as shown in gdb, and on the right side you can see the map file, and below that the output of ```journalctl -f```.
+
+Here you can see the address of the line of code calling memcpy(), and the backtrace showing the memory address of the return from memcpy(). So to find the offending line of code you can load the app into gdb and disassemble it as shown then locate the memory address from the system log.
+
+![Debugger](./images/debugger-full.png)
 
 
 ### How to extract the logs from the node
@@ -133,8 +144,8 @@ May 11 17:21:34 rh-brbaker systemd-coredump[59384]: [🡕] Process 59283 (sigseg
 May 11 17:21:34 rh-brbaker systemd[1]: systemd-coredump@16-59383-0.service: Deactivated successfully.
 May 11 17:21:34 rh-brbaker audit[1]: SERVICE_STOP pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-coredump@16-59383-0 comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
 May 11 17:21:34 rh-brbaker systemd[1981]: libpod-f3cf1a789063f2593fbcfd60df69208ae551c7c696e5caaa25bbf3cfe92be664.scope: Consumed 29.374s CPU time.
-
 ```
+
 
 ## Build the image yourself
 In the src directory run the command:

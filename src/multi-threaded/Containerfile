@@ -7,7 +7,7 @@ RUN dnf install -y gcc
 
 COPY *.c .
 COPY *.h .
-RUN gcc -fdiagnostics-color=always -g multi-threaded.c threading.c -Wl,-Map=mt-sigsegv.map -lpthread -o /build/mt-sigsegv
+RUN gcc -fdiagnostics-color=always -g mt-sigsegv.c threading.c -Wl,-Map=mt-sigsegv.map -lpthread -o mt-sigsegv
 
 FROM registry.redhat.io/ubi8:latest
 

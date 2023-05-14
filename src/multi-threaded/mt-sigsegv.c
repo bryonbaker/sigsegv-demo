@@ -20,6 +20,8 @@ main( void ) {
 
     printf("SIGSEGV Generator.\n");
 
+    printf("Thread to crash: %d\n", THREAD_TO_CRASH);
+
     startThreads();
 
     // Display a period every second so we know the main thread is alive.
@@ -29,7 +31,7 @@ main( void ) {
 
         if (difftime( thisTime, tickTime) >= 1) {
             tickTime = thisTime;
-            fprintf(stdout, ".");
+            fprintf(stdout, ".\n");
             fflush(stdout);
         }
     }
@@ -40,7 +42,7 @@ main( void ) {
 static void *thread_run(void *arg) {
     int threadNum = *(int*)arg;
 
-#ifdef CRASH_ON_THREAD_START
+//#ifdef CRASH_ON_THREAD_START
     if (threadNum == THREAD_TO_CRASH ) {
         fprintf( stdout, "Crashing thread %d\n", threadNum);
 
@@ -48,7 +50,7 @@ static void *thread_run(void *arg) {
         char *nullPtr = 0;
         *nullPtr = threadNum;
     }
-#endif // CRASH_ON_THREAD_START
+//#endif // CRASH_ON_THREAD_START
 
     fprintf( stdout, "Thread %d running.\n", threadNum);
 

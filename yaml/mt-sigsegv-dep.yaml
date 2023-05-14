@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mt-sigsegv-test
+  name: mt-sigsegv-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mt-sigsegv-test
+  template:
+    metadata:
+      labels:
+        app: mt-sigsegv-test
+    spec:
+      containers:
+      - name: mt-sigsegv-test
+        image: quay.io/bryonbaker/mt-sigsegv:latest
+        imagePullPolicy: Always

@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi8:8.6-943 as builder
+FROM registry.redhat.io/ubi8:latest as builder
 
 RUN mkdir /build
 WORKDIR /build
@@ -8,7 +8,7 @@ RUN dnf install -y gcc
 COPY sigsegv.c .
 RUN gcc -fdiagnostics-color=always -g sigsegv.c -Wl,-Map=sigsegv.map -o /build/sigsegv
 
-FROM registry.redhat.io/ubi8:8.6-943
+FROM registry.redhat.io/ubi8:latest
 
 RUN mkdir -p /app
 

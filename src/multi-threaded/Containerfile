@@ -1,0 +1,21 @@
+FROM registry.redhat.io/ubi8:latest as builder
+
+RUN mkdir /build
+WORKDIR /build
+
+RUN dnf install -y gcc
+
+COPY *.c .
+COPY *.h .
+RUN gcc -fdiagnostics-color=always -g multi-threaded.c threading.c -Wl,-Map=mt-sigsegv.map -lpthread -o /build/mt-sigsegv
+
+FROM registry.redhat.io/ubi8:latest
+
+RUN mkdir -p /app
+
+WORKDIR "/app"
+
+COPY --from=builder /build/mt-sigsegv .
+COPY --from=builder /build/mt-sigsegv.map .
+
+ENTRYPOINT ["/app/mt-sigsegv"]

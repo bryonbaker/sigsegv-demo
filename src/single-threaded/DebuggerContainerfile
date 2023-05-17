@@ -1,0 +1,8 @@
+FROM registry.redhat.io/ubi8:latest
+
+RUN mkdir /app && \
+    dnf install -y gcc && \
+    dnf install -y gdb && \
+    dnf debuginfo-install glibc-2.28-225.el8.x86_64
+
+WORKDIR /app

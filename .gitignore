@@ -1,6 +1,5 @@
-.vscode/tasks.json
-src/sigsegv
 sigsegv-demo.code-workspace
-sigsegv
-src/multi-threaded/multi-threaded
-src/multi-threaded/mt-sigsegv
+.vscode/tasks.json
+logs/**
+src/multi-threaded/image-artifacts/**
+src/multi-threaded/bin/**

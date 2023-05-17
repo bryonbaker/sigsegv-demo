@@ -11,8 +11,7 @@ RUN gcc -fdiagnostics-color=always -g mt-sigsegv.c threading.c -Wl,-Map=mt-sigse
 
 FROM registry.redhat.io/ubi8:latest
 
-RUN mkdir -p /app  && \
-    dnf install -y gdb
+RUN mkdir -p /app
 
 WORKDIR "/app"
 

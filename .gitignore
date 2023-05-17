@@ -1,5 +1,7 @@
 sigsegv-demo.code-workspace
 .vscode/tasks.json
 logs/**
-src/multi-threaded/image-artifacts/**
 src/multi-threaded/bin/**
+src/multi-threaded/image-artifacts/**
+src/single-threaded/bin/**
+src/single-threaded/image-artifacts/**

@@ -29,7 +29,7 @@ package: clean build
 	podman tag ${APP_NAME}:${VERSION} ${APP_NAME}:latest
 	podman tag ${APP_NAME}:${VERSION} quay.io/bryonbaker/${APP_NAME}:${VERSION}
 	podman tag ${APP_NAME}:${VERSION} quay.io/bryonbaker/${APP_NAME}:latest
-	./grab-build-artifacts.sh
+	./grab-build-artifacts.sh ${APP_NAME}:latest
 run:
 	bin/${APP_NAME}
 

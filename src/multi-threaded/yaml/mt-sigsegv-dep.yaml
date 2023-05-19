@@ -16,5 +16,5 @@ spec:
     spec:
       containers:
       - name: mt-sigsegv-test
-        image: quay.io/bryonbaker/mt-sigsegv:latest
+        image: quay.io/bryonbaker/mt-sigsegv:fab37ee-modified
         imagePullPolicy: Always

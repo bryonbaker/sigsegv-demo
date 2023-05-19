@@ -18,7 +18,7 @@ int
 main( void ) {
     time_t  thisTime, tickTime;
 
-    printf("SIGSEGV Generator.\n");
+    printf("SIGSEGV Generator...\n");
 
     printf("Thread to crash: %d\n", THREAD_TO_CRASH);
 
@@ -42,15 +42,13 @@ main( void ) {
 static void *thread_run(void *arg) {
     int threadNum = *(int*)arg;
 
-//#ifdef CRASH_ON_THREAD_START
-    if (threadNum == THREAD_TO_CRASH ) {
-        fprintf( stdout, "Crashing thread %d\n", threadNum);
+//    if (threadNum == THREAD_TO_CRASH ) {
+//        fprintf( stdout, "Crashing thread %d\n", threadNum);
 
-        sleep(CRASH_DELAY);
-        char *nullPtr = 0;
-        *nullPtr = threadNum;
-    }
-//#endif // CRASH_ON_THREAD_START
+//        sleep(CRASH_DELAY);
+//        char *nullPtr = 0;
+//        *nullPtr = threadNum;
+//    }
 
     fprintf( stdout, "Thread %d running.\n", threadNum);
 
@@ -90,10 +88,8 @@ crasher(int threadNum) {
             fprintf(stdout, "<%d>", threadNum);
             fflush(stdout);
         } 
-#ifndef CRASH_ON_THREAD_START
         if ((threadNum == 5) && (difftime( thisTime, startTime ) >= CRASH_DELAY)) {
             memcpy( nullPtr, &bogusMsg, strlen(bogusMsg));
         }
-#endif // CRASH_ON_THREAD_START
     }
 }

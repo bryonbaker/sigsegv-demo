@@ -18,8 +18,7 @@ APP_NAME := mt-sigsegv
 
 clean:
 	rm -f bin/${APP_NAME}
-	rm -f image-artifacts/${APP_NAME}
-	rm -f image-artifacts/${APP_NAME}.map
+	rm -f image-artifacts/*
 
 build:
 	gcc -fdiagnostics-color=always -g mt-sigsegv.c threading.c -Wl,-Map=./bin/${APP_NAME}.map -lpthread -o ./bin/${APP_NAME}
